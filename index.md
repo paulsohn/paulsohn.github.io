@@ -1,37 +1,35 @@
-## Welcome to GitHub Pages
+# PaulSohn AirBase
 
-You can use the [editor on GitHub](https://github.com/paulsohn/paulsohn.github.io/edit/main/index.md) to maintain and preview the content for your website in Markdown files.
+## 소개
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+일본 유학 중 군입대를 위해 한국에 돌아온 PaulSohn입니다.
+입대 직전에 비전을 재설정하게 되었고, 복무기간을 앞으로를 위한 준비기간으로 삼으려고 합니다.
+목표나 성과 등을 정리하기 위해 간단하게 블로그를 만들어 보았습니다.
 
-### Markdown
+AirBase는 현재 복무중인 공군의 비행기지에서 따왔으며, 한편으로는 이 기간을 더 넓은 세계로 도약하기 위한 활주로로 삼자는 개인적인 소망을 담고 있습니다.  
+물론 이미지만 따왔을 뿐 장기복무할 생각은 전혀 없습니다 :)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## 목표
 
-```markdown
-Syntax highlighted code block
+### Soft
+* 주변인들(가족, SO, 친구, 부대내 지인들 및 간부들)과의 좋은 관계 유지하기
+* 운동 꾸준히 하기
+  * 체중 63kg까지 감량
+  * 비보잉 파워무브 성공시키기
+* 코딩 인터뷰 대비
+  * LeetCode
 
-# Header 1
-## Header 2
-### Header 3
+### Hard
+* [Teach Yourself Computer Science](https://teachyourselfcs.com/)
+  * [ ] Architecture : CSAPP 완독
+  * [ ] OS : OSTEP 완독
+  * [ ] Networks
+  * [ ] Language/Compiler
+  * [ ] Distributed Systems
+* Personal Project
 
-- Bulleted
-- List
+### Interest Only
+* Statistics / ML / DL
+* Haskell
+* Physics
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/paulsohn/paulsohn.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
