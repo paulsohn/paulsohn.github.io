@@ -2,7 +2,8 @@
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
-layout: home
+# layout: home
+layout: default
 ---
 # PaulSohn AirBase
 
@@ -18,9 +19,9 @@ AirBase는 현재 복무중인 공군의 비행기지에서 따왔으며, 한편
 ## 목표
 
 ### Soft
-* 주변인들(가족, SO, 친구, 부대내 지인들 및 간부들)과의 좋은 관계 유지하기
+* 주변인들(가족, 연인, 친구, 부대 사람들 및 간부들)과의 좋은 관계 유지하기
 * 운동 꾸준히 하기
-  * 체중 63kg까지 감량
+  * 체중 60kg까지 감량
   * 비보잉 파워무브 성공시키기
 * 코딩 인터뷰 대비
   * LeetCode

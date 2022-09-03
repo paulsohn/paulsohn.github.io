@@ -22,15 +22,17 @@ title: PaulSohn AirBase
 email: paulsohn@outlook.kr
 description: >- # this means to ignore newlines until "baseurl:"
   Personal interests of @paulsohn, especially about learning, knowledge-sharing and development
-baseurl: "" # the subpath of your site, e.g. /blog
+#baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://paulsohn.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: paulsohnk
 github_username: paulsohn
 
 # Build settings
-theme: jekyll-theme-architect
+# theme: jekyll-theme-architect
+remote_theme: pages-themes/architect@v0.2.0
 plugins:
   - jekyll-feed
+  - jekyll-remote-theme
 
 # Exclude from processing.
 # The following items will not be processed, by default.
