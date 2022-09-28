@@ -37,3 +37,5 @@ gem "webrick", "~> 1.7"
 
 gem "jekyll-remote-theme", "~> 0.4.3"
 # gem "github-pages", group: :jekyll_plugins
+
+gem "minimal-mistakes-jekyll"
