@@ -4,3 +4,20 @@ main:
     url: /categories/
   # - title: "Tags"
   #   url: /tags/
+
+sidebar:
+  - title: "Diary"
+    url: /category/diary/
+  - title: "Computer Science"
+    children:
+    - title: "Algorithms"
+      url: /category/algorithm/
+    - title: "Architectures"
+      url: /category/arch/
+    - title: "Data Science"
+      url: /category/data/
+  - title: "Developments"
+    children:
+    - title: "Frontend"
+      url: /category/frontend/
+
