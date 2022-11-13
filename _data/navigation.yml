@@ -12,8 +12,10 @@ sidebar:
     children:
     - title: "Algorithms"
       url: /category/algorithm/
-    - title: "Architectures"
+    - title: "Computer Architectures"
       url: /category/arch/
+    - title: "Programming Languages"
+      url: /category/lang/
     - title: "Data Science"
       url: /category/data/
   - title: "Developments"

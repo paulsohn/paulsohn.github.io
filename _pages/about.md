@@ -1,7 +1,7 @@
 ---
-layout: posts
+layout: single
 # title: About
-date:   2022-11-22 22:54:00 +0900
+date:   2022-11-12 22:54:00 +0900
 permalink: /about/
 ---
 
@@ -35,8 +35,7 @@ I often listen a music and Choreography.
 
 ---
 
-* W, My dedicated and lovely GF
-
+* POPO-tan, My dedicated and lovely GF
 
 
 # 自己紹介

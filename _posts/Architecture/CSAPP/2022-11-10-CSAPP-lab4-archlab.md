@@ -5,6 +5,7 @@ title: "CSAPP - Lab 4. Architecture Lab"
 
 categories: arch
 tags:
+  - arch
   - CSAPP
 
 date: 2022-11-12 23:20:00 +09:00
@@ -16,7 +17,7 @@ last_modified_at: 2022-11-12 23:20:00 +09:00
 
 # Arch Lab
 
-A lab assignments using Y86-64 [ISA](https://en.wikipedia.org/wiki/Instruction_set_architecture), an educational-purpose simplified version of modern x86-64 architecture.
+A lab assignment using Y86-64 [ISA](https://en.wikipedia.org/wiki/Instruction_set_architecture), an educational-purpose simplified version of modern x86-64 architecture.
 
 The lab consists of three parts:
 - A. Write a Y86-64 assembly program to perform sum over linked list(both iterative and recursive), and copying memory.

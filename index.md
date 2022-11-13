@@ -6,6 +6,8 @@ layout: home
 classes: wide
 ---
 
-# Hi there!
+This is PaulSohn. Welcome to my blog!
 
-This is [Paul Sohn](/about). Welcome to my blog!
+* [About me and this blog](/about)
+* ~~[Resume](/resume)~~
+* ~~[Current goals](/goals)~~
