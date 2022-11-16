@@ -1,0 +1,630 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>CSAPP - Lab 4. Architecture Lab - PaulSohn-al Logs</title>
+<meta name="description" content="Arch Lab">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="PaulSohn-al Logs">
+<meta property="og:title" content="CSAPP - Lab 4. Architecture Lab">
+<meta property="og:url" content="https://paulsohn.github.io/arch/2022/11/12/CSAPP-lab4-archlab.html">
+
+
+  <meta property="og:description" content="Arch Lab">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-11-12T14:20:00+00:00">
+
+
+
+  <meta property="article:modified_time" content="2022-11-12T14:20:00+00:00">
+
+
+
+
+<link rel="canonical" href="https://paulsohn.github.io/arch/2022/11/12/CSAPP-lab4-archlab.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://paulsohn.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="PaulSohn-al Logs Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--posts">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          PaulSohn-al Logs
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle Menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <a href="/category/diary/"><span class="nav__sub-title">Diary</span></a>
+        
+
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Computer Science</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/category/algorithm/">Algorithms</a></li>
+          
+            <li><a href="/category/arch/">Computer Architectures</a></li>
+          
+            <li><a href="/category/lang/">Programming Languages</a></li>
+          
+            <li><a href="/category/data/">Data Science</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Developments</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/category/frontend/">Frontend</a></li>
+          
+            <li><a href="/category/dev/">Misc</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">CSAPP - Lab 4. Architecture Lab</h1>
+    
+    <h1 id="arch-lab">Arch Lab</h1>
+
+<p>A lab assignment using Y86-64 <a href="https://en.wikipedia.org/wiki/Instruction_set_architecture">ISA</a>, an educational-purpose simplified version of modern x86-64 architecture.</p>
+
+<p>The lab consists of three parts:</p>
+<ul>
+  <li>A. Write a Y86-64 assembly program to perform sum over linked list(both iterative and recursive), and copying memory.</li>
+  <li>B. Modify sequential SEQ processor to support <code class="language-plaintext highlighter-rouge">iaddq</code> instruction. This is an intermediate step for C.</li>
+  <li>C. Modify pipelined PIPE processor to support <code class="language-plaintext highlighter-rouge">iaddq</code> instruction, and use it to optimize <code class="language-plaintext highlighter-rouge">ncopy</code> function. The function <code class="language-plaintext highlighter-rouge">ncopy(src, dst, len)</code> copies <code class="language-plaintext highlighter-rouge">len</code> words of memory <code class="language-plaintext highlighter-rouge">src</code> to <code class="language-plaintext highlighter-rouge">dst</code> as well as returning number of positive elements.</li>
+</ul>
+
+<h2 id="part-a">Part A</h2>
+
+<p>simple.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum_list:
+	irmovq $0,%rax		# val = 0
+	andq %rdi,%rdi		# set CC
+	je outside1
+loop1:
+	mrmovq (%rdi),%rsi  # rsi = ls-&gt;val
+	addq %rsi,%rax		# val += rsi
+	mrmovq 8(%rdi),%rdi	# ls = ls-&gt;next
+	andq %rdi,%rdi		# set CC
+	jne loop1
+outside1:
+	ret					# return val
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsum_list:
+	andq %rdi,%rdi		# set CC
+	jne else1
+	irmovq $0,%rax
+	ret                 # if(!ls) return 0;
+else1:
+	mrmovq (%rdi),%rcx  # val = ls-&gt;val;
+	mrmovq 8(%rdi),%rdi
+	pushq %rcx			# since we're doing recursion, local vars should be saved into the stack.
+	call rsum_list		# %rax = rsum_list(ls-&gt;next)
+	popq %rcx
+	addq %rcx,%rax
+	ret
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>copy_block:
+    irmovq $8,%r9       # increment, const 8
+    irmovq $1,%r10      # decrement, const 1
+    irmovq $0,%rax
+    andq %rdx,%rdx  # set CC
+    je outside1
+loop1:
+    mrmovq (%rdi),%rcx  # val = *src
+    addq %r9,%rdi       # src++
+    rmmovq %rcx,(%rsi)  # *dest = val
+    addq %r9,%rsi       # dest++
+    xorq %rcx,%rax      # result ^= val
+    subq %r10,%rdx      # len--
+    andq %rdx,%rdx      # set CC
+    jne loop1
+outside1:
+    ret
+</code></pre></div></div>
+
+<h2 id="part-b">Part B</h2>
+
+<p><code class="language-plaintext highlighter-rouge">iaddq</code>, by its specification, needs constant word fetch(<code class="language-plaintext highlighter-rouge">valC</code>) and it should fed the adder as well as register B value(<code class="language-plaintext highlighter-rouge">valB</code>).
+Others are same as <code class="language-plaintext highlighter-rouge">iirmovq</code>, which puts <code class="language-plaintext highlighter-rouge">valC</code> and zero to the adder.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in seq/seq-full.hcl
+
+bool instr_valid = icode in { INOP, (...), IIADDQ };
+bool need_regids = icode in { (...), IIADDQ };
+bool need_valC = icode in { (...), IIADDQ };
+
+word srcB = [
+	icode in { IOPQ, IIADDQ, IRMMOVQ, IMRMOVQ  } : rB; 
+	(...)
+];
+word dstE = [
+	icode in { IRRMOVQ } &amp;&amp; Cnd : rB;
+	icode in { IIRMOVQ, IOPQ, IIADDQ } : rB;
+	(...)
+];
+
+word aluA = [
+	(...)
+	icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ } : valC;
+	(...)
+];
+word aluB = [
+	icode in { IRMMOVQ, IMRMOVQ, IOPQ, IIADDQ, (...) } : valB;
+	(...)
+];
+bool set_cc = icode in { IOPQ, IIADDQ };
+</code></pre></div></div>
+
+<p>In the example code <code class="language-plaintext highlighter-rouge">y86-code/asumi.ys</code> for testing <code class="language-plaintext highlighter-rouge">iaddq</code> instruction, a loop check depends on CC after <code class="language-plaintext highlighter-rouge">iaddq</code>.</p>
+
+<p>After feeding ALU, we’re done - the result will be handled as same as other instructions.</p>
+
+<h2 id="part-c">Part C</h2>
+
+<h3 id="testing">Testing</h3>
+
+<p>Since I had to create many variations of PIPE and test them, I defined some macros in <code class="language-plaintext highlighter-rouge">pipe/Makefile</code> so that the build and compilation could be done with a single line.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test: clean psim
+	(cd ../y86-code; make testpsim)
+	(cd ../ptest; make SIM=../C_pipe/psim)
+
+testi: clean psim
+	(cd ../y86-code; make testpsim)
+	(cd ../ptest; make SIM=../C_pipe/psim TFLAGS=-i)
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">$ make test VERSION=&lt;version&gt;</code> for <code class="language-plaintext highlighter-rouge">iaddq</code>-unsupported versions, and <code class="language-plaintext highlighter-rouge">$ makei test VERSION=&lt;version&gt;</code> for supported ones.</p>
+
+<h3 id="implementing-immediate-addition">Implementing Immediate Addition</h3>
+
+<p>First implement <code class="language-plaintext highlighter-rouge">iaddq</code> in our pipelined processor also.
+The modifications are similar to SEQ, except that every variable has stage prefixes(e.g. <code class="language-plaintext highlighter-rouge">d_srcB</code>)</p>
+
+<h3 id="implementing-other-branch-prediction-strategies">Implementing Other Branch Prediction Strategies</h3>
+
+<p>The default setting of branch prediction in PIPE is AT(always taken).
+Depending on the access pattern, NT(never taken) or BTFNT(backward-taken forward-not taken) may perform better so I implemented both of them.
+Here is how I modified PIPE architecture to apply BTFNT strategy. I omitted NT for it is simpler.</p>
+
+<p>Note that this BTFNT implementation not yet supports <code class="language-plaintext highlighter-rouge">iaddq</code> - you may patch this into the above <code class="language-plaintext highlighter-rouge">iaddq</code> implementation.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in pipe/pipe-btfnt.hcl
+word f_pc = [
+  # Mispredicted branch.
+  M_icode == IJXX &amp;&amp; !M_Cnd &amp;&amp; M_valE &lt; M_valA : M_valA; // mistakenly taken
+  M_icode == IJXX &amp;&amp; M_Cnd &amp;&amp; M_valE &gt;= M_valA : M_valE; // mistakenly not taken
+  (...)
+];
+word f_predPC = [
+  (...)
+  f_icode == IJXX &amp;&amp; f_valC &lt; f_valP : f_valC; # BTFNT
+	1 : f_valP; 
+];
+
+word aluA = [
+	(...)
+	E_icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ,
+				IJXX } : E_valC; #//
+	(...)
+];
+word aluB = [
+	(...)
+	E_icode in { IRRMOVQ, IIRMOVQ,
+				IJXX } : 0; #//
+	(...)
+];
+
+bool D_bubble = 
+  # Mispredicted branch
+  (E_icode == IJXX &amp;&amp; ( (!e_Cnd &amp;&amp; e_valE &lt; E_valA)
+						|| (e_Cnd &amp;&amp; e_valE &gt; E_valA) ) ) ||
+  # Stalling at fetch wile ret passes through pipeline
+  # but not condition for a load/use hazard
+  (...)
+bool E_bubble = 
+  # Mispredicted branch
+	(E_icode == IJXX &amp;&amp; ( (!e_Cnd &amp;&amp; e_valE &lt; E_valA)
+						|| (e_Cnd &amp;&amp; e_valE &gt; E_valA) ) ) ||
+	# Conditions for a load/use hazard
+	(...)
+</code></pre></div></div>
+
+<p>This time, <code class="language-plaintext highlighter-rouge">IJXX</code> also uses ALU - just for passing <code class="language-plaintext highlighter-rouge">valC</code> - as the handout material specifies:</p>
+
+<blockquote>
+  <p>When some branches are predicted as not-taken,
+you need some way to get <code class="language-plaintext highlighter-rouge">valC</code> into pipeline register <code class="language-plaintext highlighter-rouge">M</code>,
+so that you can correct for a mispredicted branch.</p>
+</blockquote>
+
+<p>And bubbling condition should be changed also.</p>
+
+<hr />
+
+<p>Despite everything above, in this lab(and given datasets), AT outperformed slightly better than NT and BTFNT.</p>
+
+<h3 id="optimizing-array-copying-and-counting-positive-elements-function">Optimizing ‘Array Copying and Counting Positive Elements’ Function</h3>
+
+<p>I used <code class="language-plaintext highlighter-rouge">iaddq</code> to avoid redundancy for storing constants and <code class="language-plaintext highlighter-rouge">x8 -&gt; x2</code> loop unrolling strategy to reduce step counts.</p>
+
+<p>Loop unrolling is effective here, because in a ‘fully-rolled’ loop, every time we access the memory we encounter address increment -</p>
+<ul>
+  <li>load <code class="language-plaintext highlighter-rouge">(%rdi)</code></li>
+  <li>increment <code class="language-plaintext highlighter-rouge">%rdi</code></li>
+  <li>load <code class="language-plaintext highlighter-rouge">(%rdi)</code></li>
+  <li>increment <code class="language-plaintext highlighter-rouge">%rdi</code></li>
+  <li>… and so on.</li>
+</ul>
+
+<p>however when we adopt loop unrolling, we can implement the same procedure with less steps:</p>
+<ul>
+  <li>load <code class="language-plaintext highlighter-rouge">(%rdi)</code></li>
+  <li>load <code class="language-plaintext highlighter-rouge">8(%rdi)</code></li>
+  <li>increment <code class="language-plaintext highlighter-rouge">%rdi</code></li>
+  <li>… and so on.</li>
+</ul>
+
+<p>Thus, we get better performance when we apply larger unrolling - no problem for ‘register spilling’ since we are hardcoding the assembly and reuse registers once the values are stored.
+The only reason we don’t choose <code class="language-plaintext highlighter-rouge">x64</code> unrolling is the lab restriction of <code class="language-plaintext highlighter-rouge">ncopy.yo</code> less then 1000 bytes long.
+The datapath for PIPE processor is trivial so multiple counter woudln’t bring more efficiency.</p>
+
+<p>For counting the number of positive elements, I copy-pasted this piece of lines everywhere when <code class="language-plaintext highlighter-rouge">%r8</code> (or other registers) is holding the loaded element.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  andq %r8, %r8
+	jle Npos81
+	iaddq $1, %rax
+Npos81:
+</code></pre></div></div>
+
+<p>My final score for part C was <code class="language-plaintext highlighter-rouge">52.2/60.0</code>, with AT.
+(BTFNT and NT gives <code class="language-plaintext highlighter-rouge">51.5</code> and <code class="language-plaintext highlighter-rouge">50.7</code>, )</p>
+
+<h3 id="using-conditional-moves">Using Conditional Moves?</h3>
+
+<p>In PIPE, the branch misprediction penalty is up to 2 bubbles - so I decided to make another version which minimizes the use of conditional jumps.
+Instead of the counting-positive scheme above,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  rrmovq %rax, %rcx
+	iaddq $1, %rcx
+	andq %r8, %r8
+	cmovg %rcx, %rax
+</code></pre></div></div>
+
+<p>The score however, was under <code class="language-plaintext highlighter-rouge">45</code>.
+Although ‘real’ (x86-64) architectures have high misprediction penalty up to 19 clock cycles(according to CSAPP), this simple PIPE architecture has relatively low penalty of 2 bubbles and the average execution time of our jump-based count per element is 3.5, i.e. half of the penalty plus 2.5 - assuming the positive and non-positive elements in memory both appear half-half.
+On contrary, our cmove-based count snippet requires constant 4-cycle per elements.</p>
+
+<p>If I’ve been allowed to add another instructions, I would add hypothetical <em>conditional add</em> instruction so that I could rearrange count like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  andq %r8, %r8
+  caddg $1, %rax
+</code></pre></div></div>
+<p>which costs constant 2-cycle per elements (and definitely I would get <code class="language-plaintext highlighter-rouge">60/60</code>!)</p>
+
+
+<ul class="taxonomy__index">
+  
+  
+    <li>
+      <a href="#2022">
+        <strong>2022</strong> <span class="taxonomy__count">5</span>
+      </a>
+    </li>
+  
+</ul>
+
+
+
+
+  <section id="2022" class="taxonomy__section">
+    <h2 class="archive__subtitle">2022</h2>
+    <div class="entries-list">
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/2022/11/15/local-build-jekyll.html" rel="permalink">Jekyll: Build Locally and Push into Github
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Motivation
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/11/12/CSAPP-lab4-archlab.html" rel="permalink">CSAPP - Lab 4. Architecture Lab
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Arch Lab
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/10/18/CSAPP-finished-reading.html" rel="permalink">CSAPP - Finished Reading
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">I Finished ‘Reading’ CSAPP!
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/10/05/CSAPP-lab1-datalab.html" rel="permalink">CSAPP - Lab 1. (32-bit) Data Lab
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Data Lab
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/2022/08/23/setting-up-jekyll-blog.html" rel="permalink">Setting up Jekyll Blog
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Setting up Jekyll Blog
+</p>
+  </article>
+</div>
+
+      
+    </div>
+    <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
+  </section>
+
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 PaulSohn-al Logs. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

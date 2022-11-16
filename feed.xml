@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="https://paulsohn.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://paulsohn.github.io/" rel="alternate" type="text/html" /><updated>2022-11-16T07:56:44+00:00</updated><id>https://paulsohn.github.io/feed.xml</id><title type="html">PaulSohn-al Logs</title><subtitle>PaulSohn-al log, a personal blog of @paulsohn</subtitle><entry><title type="html">Jekyll: Build Locally and Push into Github</title><link href="https://paulsohn.github.io/dev/2022/11/15/local-build-jekyll.html" rel="alternate" type="text/html" title="Jekyll: Build Locally and Push into Github" /><published>2022-11-15T10:26:00+00:00</published><updated>2022-11-15T10:26:00+00:00</updated><id>https://paulsohn.github.io/dev/2022/11/15/local-build-jekyll</id><content type="html" xml:base="https://paulsohn.github.io/dev/2022/11/15/local-build-jekyll.html"><![CDATA[<h2 id="motivation">Motivation</h2>
+
+<p>I wanted to use <code class="language-plaintext highlighter-rouge">jekyll-archives</code> in my blog to autogenerate index pages for each category.
+This worked on my local machine, but when I published the changes, I soon realized that my expected category-wise index pages are not shown, and instead I got 404.</p>
+
+<p>So I did some research, and soon knew that github pages only support <a href="https://pages.github.com/versions/">specific jekyll plugins</a>, and if you want to use more than that, you may <strong>build locally and upload the compiled result as a static site</strong> as explained in <a href="http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html">this reference</a>.</p>
+
+<h2 id="how-to-build-jekyll-locally-with-rakeruby-make">How to Build Jekyll Locally with rake(ruby make)</h2>
+
+<p>Provide this <code class="language-plaintext highlighter-rouge">rakefile</code> in our jekyll root directory:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"rubygems"</span>
+<span class="nb">require</span> <span class="s2">"tmpdir"</span>
+
+<span class="nb">require</span> <span class="s2">"bundler/setup"</span>
+<span class="nb">require</span> <span class="s2">"jekyll"</span>
+
+<span class="no">GITHUB_REPONAME</span> <span class="o">=</span> <span class="c1"># my repo goes here</span>
+
+<span class="n">desc</span> <span class="s2">"Generate blog files"</span>
+<span class="n">task</span> <span class="ss">:generate</span> <span class="k">do</span>
+  <span class="no">Jekyll</span><span class="o">::</span><span class="no">Site</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">Jekyll</span><span class="p">.</span><span class="nf">configuration</span><span class="p">({</span>
+    <span class="s2">"source"</span>      <span class="o">=&gt;</span> <span class="s2">"."</span><span class="p">,</span>
+    <span class="s2">"destination"</span> <span class="o">=&gt;</span> <span class="s2">"_site"</span>
+  <span class="p">})).</span><span class="nf">process</span>
+<span class="k">end</span>
+
+<span class="n">desc</span> <span class="s2">"Generate and publish blog to gh-pages"</span>
+<span class="n">task</span> <span class="ss">:publish</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="ss">:generate</span><span class="p">]</span> <span class="k">do</span>
+  <span class="no">Dir</span><span class="p">.</span><span class="nf">mktmpdir</span> <span class="k">do</span> <span class="o">|</span><span class="n">tmp</span><span class="o">|</span>
+    <span class="n">cp_r</span> <span class="s2">"_site/."</span><span class="p">,</span> <span class="n">tmp</span>
+
+    <span class="n">pwd</span> <span class="o">=</span> <span class="no">Dir</span><span class="p">.</span><span class="nf">pwd</span>
+    <span class="no">Dir</span><span class="p">.</span><span class="nf">chdir</span> <span class="n">tmp</span>
+
+    <span class="nb">system</span> <span class="s2">"cd .."</span>
+    <span class="nb">system</span> <span class="s2">"git init -b built"</span>
+    <span class="nb">system</span> <span class="s2">"git add ."</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">"Site updated at </span><span class="si">#{</span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">utc</span><span class="si">}</span><span class="s2">"</span>
+    <span class="nb">system</span> <span class="s2">"git commit -m </span><span class="si">#{</span><span class="n">message</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+    <span class="nb">system</span> <span class="s2">"git remote add origin https://github.com/</span><span class="si">#{</span><span class="no">GITHUB_REPONAME</span><span class="si">}</span><span class="s2">.git"</span>
+    <span class="nb">system</span> <span class="s2">"git push origin built --force"</span>
+
+    <span class="no">Dir</span><span class="p">.</span><span class="nf">chdir</span> <span class="n">pwd</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I slightly modified the code so that I can separately upload on different branches - source files on <code class="language-plaintext highlighter-rouge">main</code> and build output on <code class="language-plaintext highlighter-rouge">built</code><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>.</p>
+
+<p>Basically, this code enables <code class="language-plaintext highlighter-rouge">rake generate</code> to build the blog (into <code class="language-plaintext highlighter-rouge">/_site/</code>, if default settings), and <code class="language-plaintext highlighter-rouge">rake publish</code> to build then initialize <code class="language-plaintext highlighter-rouge">/_site/</code> as git repo and push it into the remote github repo, branch <code class="language-plaintext highlighter-rouge">built</code>. The commit message is generated with current time.</p>
+
+<h3 id="still-problem">Still Problem</h3>
+
+<p>This solution, while apparently correct, still did not work for me.
+I failed to figure out why, but <code class="language-plaintext highlighter-rouge">rake generate</code> appears to be omitting <code class="language-plaintext highlighter-rouge">jekyll-archives</code> I wanted to apply, and the build result is different from that of <code class="language-plaintext highlighter-rouge">jekyll build</code>.</p>
+
+<p>To get my desired behavior, I simply changed the task body into invocation of system command.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">task</span> <span class="ss">:generate</span> <span class="k">do</span>
+  <span class="nb">system</span> <span class="s2">"jekyll build"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I also tried to get the API docs of Jekyll package used inside Ruby, but I couldn’t find one.
+Should admit also that I am too lazy to dig into the Jekyll code (or even learn Ruby) just for publishing a blog,
+I wanted to keep my environment setting step minimal and do the real works as fast I can - or at least for this moment.</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://pages.github.com/versions/">Dependency versions | Github Pages</a></li>
+  <li><a href="http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html">Using Jekyll plugins on GitHub Pages</a></li>
+  <li><a href="https://jr-developers.github.io/blog/2020/12/08/blog1.html">Jekyll Github Page 미지원 Plugin 빌드 배포</a> (Korean)</li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>I feel sorry for that name. Maybe <code class="language-plaintext highlighter-rouge">build</code> would be a better choice, but hey, I’m not an English native person. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>]]></content><author><name></name></author><category term="dev" /><summary type="html"><![CDATA[Motivation]]></summary></entry><entry><title type="html">CSAPP - Lab 4. Architecture Lab</title><link href="https://paulsohn.github.io/arch/2022/11/12/CSAPP-lab4-archlab.html" rel="alternate" type="text/html" title="CSAPP - Lab 4. Architecture Lab" /><published>2022-11-12T14:20:00+00:00</published><updated>2022-11-12T14:20:00+00:00</updated><id>https://paulsohn.github.io/arch/2022/11/12/CSAPP-lab4-archlab</id><content type="html" xml:base="https://paulsohn.github.io/arch/2022/11/12/CSAPP-lab4-archlab.html"><![CDATA[<h1 id="arch-lab">Arch Lab</h1>
+
+<p>A lab assignment using Y86-64 <a href="https://en.wikipedia.org/wiki/Instruction_set_architecture">ISA</a>, an educational-purpose simplified version of modern x86-64 architecture.</p>
+
+<p>The lab consists of three parts:</p>
+<ul>
+  <li>A. Write a Y86-64 assembly program to perform sum over linked list(both iterative and recursive), and copying memory.</li>
+  <li>B. Modify sequential SEQ processor to support <code class="language-plaintext highlighter-rouge">iaddq</code> instruction. This is an intermediate step for C.</li>
+  <li>C. Modify pipelined PIPE processor to support <code class="language-plaintext highlighter-rouge">iaddq</code> instruction, and use it to optimize <code class="language-plaintext highlighter-rouge">ncopy</code> function. The function <code class="language-plaintext highlighter-rouge">ncopy(src, dst, len)</code> copies <code class="language-plaintext highlighter-rouge">len</code> words of memory <code class="language-plaintext highlighter-rouge">src</code> to <code class="language-plaintext highlighter-rouge">dst</code> as well as returning number of positive elements.</li>
+</ul>
+
+<h2 id="part-a">Part A</h2>
+
+<p>simple.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum_list:
+	irmovq $0,%rax		# val = 0
+	andq %rdi,%rdi		# set CC
+	je outside1
+loop1:
+	mrmovq (%rdi),%rsi  # rsi = ls-&gt;val
+	addq %rsi,%rax		# val += rsi
+	mrmovq 8(%rdi),%rdi	# ls = ls-&gt;next
+	andq %rdi,%rdi		# set CC
+	jne loop1
+outside1:
+	ret					# return val
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsum_list:
+	andq %rdi,%rdi		# set CC
+	jne else1
+	irmovq $0,%rax
+	ret                 # if(!ls) return 0;
+else1:
+	mrmovq (%rdi),%rcx  # val = ls-&gt;val;
+	mrmovq 8(%rdi),%rdi
+	pushq %rcx			# since we're doing recursion, local vars should be saved into the stack.
+	call rsum_list		# %rax = rsum_list(ls-&gt;next)
+	popq %rcx
+	addq %rcx,%rax
+	ret
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>copy_block:
+    irmovq $8,%r9       # increment, const 8
+    irmovq $1,%r10      # decrement, const 1
+    irmovq $0,%rax
+    andq %rdx,%rdx  # set CC
+    je outside1
+loop1:
+    mrmovq (%rdi),%rcx  # val = *src
+    addq %r9,%rdi       # src++
+    rmmovq %rcx,(%rsi)  # *dest = val
+    addq %r9,%rsi       # dest++
+    xorq %rcx,%rax      # result ^= val
+    subq %r10,%rdx      # len--
+    andq %rdx,%rdx      # set CC
+    jne loop1
+outside1:
+    ret
+</code></pre></div></div>
+
+<h2 id="part-b">Part B</h2>
+
+<p><code class="language-plaintext highlighter-rouge">iaddq</code>, by its specification, needs constant word fetch(<code class="language-plaintext highlighter-rouge">valC</code>) and it should fed the adder as well as register B value(<code class="language-plaintext highlighter-rouge">valB</code>).
+Others are same as <code class="language-plaintext highlighter-rouge">iirmovq</code>, which puts <code class="language-plaintext highlighter-rouge">valC</code> and zero to the adder.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in seq/seq-full.hcl
+
+bool instr_valid = icode in { INOP, (...), IIADDQ };
+bool need_regids = icode in { (...), IIADDQ };
+bool need_valC = icode in { (...), IIADDQ };
+
+word srcB = [
+	icode in { IOPQ, IIADDQ, IRMMOVQ, IMRMOVQ  } : rB; 
+	(...)
+];
+word dstE = [
+	icode in { IRRMOVQ } &amp;&amp; Cnd : rB;
+	icode in { IIRMOVQ, IOPQ, IIADDQ } : rB;
+	(...)
+];
+
+word aluA = [
+	(...)
+	icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ } : valC;
+	(...)
+];
+word aluB = [
+	icode in { IRMMOVQ, IMRMOVQ, IOPQ, IIADDQ, (...) } : valB;
+	(...)
+];
+bool set_cc = icode in { IOPQ, IIADDQ };
+</code></pre></div></div>
+
+<p>In the example code <code class="language-plaintext highlighter-rouge">y86-code/asumi.ys</code> for testing <code class="language-plaintext highlighter-rouge">iaddq</code> instruction, a loop check depends on CC after <code class="language-plaintext highlighter-rouge">iaddq</code>.</p>
+
+<p>After feeding ALU, we’re done - the result will be handled as same as other instructions.</p>
+
+<h2 id="part-c">Part C</h2>
+
+<h3 id="testing">Testing</h3>
+
+<p>Since I had to create many variations of PIPE and test them, I defined some macros in <code class="language-plaintext highlighter-rouge">pipe/Makefile</code> so that the build and compilation could be done with a single line.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test: clean psim
+	(cd ../y86-code; make testpsim)
+	(cd ../ptest; make SIM=../C_pipe/psim)
+
+testi: clean psim
+	(cd ../y86-code; make testpsim)
+	(cd ../ptest; make SIM=../C_pipe/psim TFLAGS=-i)
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">$ make test VERSION=&lt;version&gt;</code> for <code class="language-plaintext highlighter-rouge">iaddq</code>-unsupported versions, and <code class="language-plaintext highlighter-rouge">$ makei test VERSION=&lt;version&gt;</code> for supported ones.</p>
+
+<h3 id="implementing-immediate-addition">Implementing Immediate Addition</h3>
+
+<p>First implement <code class="language-plaintext highlighter-rouge">iaddq</code> in our pipelined processor also.
+The modifications are similar to SEQ, except that every variable has stage prefixes(e.g. <code class="language-plaintext highlighter-rouge">d_srcB</code>)</p>
+
+<h3 id="implementing-other-branch-prediction-strategies">Implementing Other Branch Prediction Strategies</h3>
+
+<p>The default setting of branch prediction in PIPE is AT(always taken).
+Depending on the access pattern, NT(never taken) or BTFNT(backward-taken forward-not taken) may perform better so I implemented both of them.
+Here is how I modified PIPE architecture to apply BTFNT strategy. I omitted NT for it is simpler.</p>
+
+<p>Note that this BTFNT implementation not yet supports <code class="language-plaintext highlighter-rouge">iaddq</code> - you may patch this into the above <code class="language-plaintext highlighter-rouge">iaddq</code> implementation.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in pipe/pipe-btfnt.hcl
+word f_pc = [
+  # Mispredicted branch.
+  M_icode == IJXX &amp;&amp; !M_Cnd &amp;&amp; M_valE &lt; M_valA : M_valA; // mistakenly taken
+  M_icode == IJXX &amp;&amp; M_Cnd &amp;&amp; M_valE &gt;= M_valA : M_valE; // mistakenly not taken
+  (...)
+];
+word f_predPC = [
+  (...)
+  f_icode == IJXX &amp;&amp; f_valC &lt; f_valP : f_valC; # BTFNT
+	1 : f_valP; 
+];
+
+word aluA = [
+	(...)
+	E_icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ,
+				IJXX } : E_valC; #//
+	(...)
+];
+word aluB = [
+	(...)
+	E_icode in { IRRMOVQ, IIRMOVQ,
+				IJXX } : 0; #//
+	(...)
+];
+
+bool D_bubble = 
+  # Mispredicted branch
+  (E_icode == IJXX &amp;&amp; ( (!e_Cnd &amp;&amp; e_valE &lt; E_valA)
+						|| (e_Cnd &amp;&amp; e_valE &gt; E_valA) ) ) ||
+  # Stalling at fetch wile ret passes through pipeline
+  # but not condition for a load/use hazard
+  (...)
+bool E_bubble = 
+  # Mispredicted branch
+	(E_icode == IJXX &amp;&amp; ( (!e_Cnd &amp;&amp; e_valE &lt; E_valA)
+						|| (e_Cnd &amp;&amp; e_valE &gt; E_valA) ) ) ||
+	# Conditions for a load/use hazard
+	(...)
+</code></pre></div></div>
+
+<p>This time, <code class="language-plaintext highlighter-rouge">IJXX</code> also uses ALU - just for passing <code class="language-plaintext highlighter-rouge">valC</code> - as the handout material specifies:</p>
+
+<blockquote>
+  <p>When some branches are predicted as not-taken,
+you need some way to get <code class="language-plaintext highlighter-rouge">valC</code> into pipeline register <code class="language-plaintext highlighter-rouge">M</code>,
+so that you can correct for a mispredicted branch.</p>
+</blockquote>
+
+<p>And bubbling condition should be changed also.</p>
+
+<hr />
+
+<p>Despite everything above, in this lab(and given datasets), AT outperformed slightly better than NT and BTFNT.</p>
+
+<h3 id="optimizing-array-copying-and-counting-positive-elements-function">Optimizing ‘Array Copying and Counting Positive Elements’ Function</h3>
+
+<p>I used <code class="language-plaintext highlighter-rouge">iaddq</code> to avoid redundancy for storing constants and <code class="language-plaintext highlighter-rouge">x8 -&gt; x2</code> loop unrolling strategy to reduce step counts.</p>
+
+<p>Loop unrolling is effective here, because in a ‘fully-rolled’ loop, every time we access the memory we encounter address increment -</p>
+<ul>
+  <li>load <code class="language-plaintext highlighter-rouge">(%rdi)</code></li>
+  <li>increment <code class="language-plaintext highlighter-rouge">%rdi</code></li>
+  <li>load <code class="language-plaintext highlighter-rouge">(%rdi)</code></li>
+  <li>increment <code class="language-plaintext highlighter-rouge">%rdi</code></li>
+  <li>… and so on.</li>
+</ul>
+
+<p>however when we adopt loop unrolling, we can implement the same procedure with less steps:</p>
+<ul>
+  <li>load <code class="language-plaintext highlighter-rouge">(%rdi)</code></li>
+  <li>load <code class="language-plaintext highlighter-rouge">8(%rdi)</code></li>
+  <li>increment <code class="language-plaintext highlighter-rouge">%rdi</code></li>
+  <li>… and so on.</li>
+</ul>
+
+<p>Thus, we get better performance when we apply larger unrolling - no problem for ‘register spilling’ since we are hardcoding the assembly and reuse registers once the values are stored.
+The only reason we don’t choose <code class="language-plaintext highlighter-rouge">x64</code> unrolling is the lab restriction of <code class="language-plaintext highlighter-rouge">ncopy.yo</code> less then 1000 bytes long.
+The datapath for PIPE processor is trivial so multiple counter woudln’t bring more efficiency.</p>
+
+<p>For counting the number of positive elements, I copy-pasted this piece of lines everywhere when <code class="language-plaintext highlighter-rouge">%r8</code> (or other registers) is holding the loaded element.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  andq %r8, %r8
+	jle Npos81
+	iaddq $1, %rax
+Npos81:
+</code></pre></div></div>
+
+<p>My final score for part C was <code class="language-plaintext highlighter-rouge">52.2/60.0</code>, with AT.
+(BTFNT and NT gives <code class="language-plaintext highlighter-rouge">51.5</code> and <code class="language-plaintext highlighter-rouge">50.7</code>, )</p>
+
+<h3 id="using-conditional-moves">Using Conditional Moves?</h3>
+
+<p>In PIPE, the branch misprediction penalty is up to 2 bubbles - so I decided to make another version which minimizes the use of conditional jumps.
+Instead of the counting-positive scheme above,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  rrmovq %rax, %rcx
+	iaddq $1, %rcx
+	andq %r8, %r8
+	cmovg %rcx, %rax
+</code></pre></div></div>
+
+<p>The score however, was under <code class="language-plaintext highlighter-rouge">45</code>.
+Although ‘real’ (x86-64) architectures have high misprediction penalty up to 19 clock cycles(according to CSAPP), this simple PIPE architecture has relatively low penalty of 2 bubbles and the average execution time of our jump-based count per element is 3.5, i.e. half of the penalty plus 2.5 - assuming the positive and non-positive elements in memory both appear half-half.
+On contrary, our cmove-based count snippet requires constant 4-cycle per elements.</p>
+
+<p>If I’ve been allowed to add another instructions, I would add hypothetical <em>conditional add</em> instruction so that I could rearrange count like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  andq %r8, %r8
+  caddg $1, %rax
+</code></pre></div></div>
+<p>which costs constant 2-cycle per elements (and definitely I would get <code class="language-plaintext highlighter-rouge">60/60</code>!)</p>]]></content><author><name></name></author><category term="arch" /><category term="arch" /><category term="CSAPP" /><summary type="html"><![CDATA[Arch Lab]]></summary></entry><entry><title type="html">CSAPP - Finished Reading</title><link href="https://paulsohn.github.io/arch/2022/10/18/CSAPP-finished-reading.html" rel="alternate" type="text/html" title="CSAPP - Finished Reading" /><published>2022-10-18T11:00:00+00:00</published><updated>2022-10-18T11:00:00+00:00</updated><id>https://paulsohn.github.io/arch/2022/10/18/CSAPP-finished-reading</id><content type="html" xml:base="https://paulsohn.github.io/arch/2022/10/18/CSAPP-finished-reading.html"><![CDATA[<h1 id="i-finished-reading-csapp">I Finished ‘Reading’ CSAPP!</h1>
+
+<p>Randal E. Bryant &amp; David R. O’Hallaron, <em>Computer Systems: A Programmer’s Perspective</em>, 3rd Global Edition (CS:APP3e)</p>
+
+<p>2022-07-28 ~ 2022-10-08, not including its practices or labs.</p>
+
+<p>Now it’s time to go and start coding!</p>]]></content><author><name></name></author><category term="arch" /><category term="arch" /><category term="CSAPP" /><summary type="html"><![CDATA[I Finished ‘Reading’ CSAPP!]]></summary></entry><entry><title type="html">CSAPP - Lab 1. (32-bit) Data Lab</title><link href="https://paulsohn.github.io/arch/2022/10/05/CSAPP-lab1-datalab.html" rel="alternate" type="text/html" title="CSAPP - Lab 1. (32-bit) Data Lab" /><published>2022-10-05T08:28:00+00:00</published><updated>2022-10-05T08:28:00+00:00</updated><id>https://paulsohn.github.io/arch/2022/10/05/CSAPP-lab1-datalab</id><content type="html" xml:base="https://paulsohn.github.io/arch/2022/10/05/CSAPP-lab1-datalab.html"><![CDATA[<h1 id="data-lab">Data Lab</h1>
+
+<p>A lab assignment to implement primitive operations with (mostly) bitwise operations only. <code class="language-plaintext highlighter-rouge">int</code> type is assumed to be 32-bit.</p>
+
+<h2 id="integer-coding">Integer Coding</h2>
+
+<h3 id="common-techniques">Common Techniques</h3>
+
+<ul>
+  <li>an all-set bit mask: <code class="language-plaintext highlighter-rouge">~0</code></li>
+  <li>a bit mask from <code class="language-plaintext highlighter-rouge">x</code>, full of its sign bit: <code class="language-plaintext highlighter-rouge">x &gt;&gt; 31</code></li>
+</ul>
+
+<h3 id="istmax">isTmax</h3>
+
+<blockquote>
+  <p>Check whether the argument <code class="language-plaintext highlighter-rouge">x</code> is <code class="language-plaintext highlighter-rouge">INT_MAX</code> or not. can use <code class="language-plaintext highlighter-rouge">! ~ &amp; ^ | +</code>.</p>
+</blockquote>
+
+<p>We can focus on a unique feature of <code class="language-plaintext highlighter-rouge">INT_MAX</code>: its successor is the exact bit negation of itself - every bits of <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">x+1</code> are different.
+The bitwise comparison for <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">x+1</code> can be implemented as <code class="language-plaintext highlighter-rouge">(x+1)^(~x)</code> (<code class="language-plaintext highlighter-rouge">(~(x+1))^x</code> works also), and this will be zero when <code class="language-plaintext highlighter-rouge">x</code> is equal to <code class="language-plaintext highlighter-rouge">INT_MAX</code>.</p>
+
+<p>Actually, this feature is not unique - <code class="language-plaintext highlighter-rouge">-1</code> also fits to this description.
+So we have to detect <code class="language-plaintext highlighter-rouge">-1</code> in a different way.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">isTmax</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">~</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="o">!</span><span class="n">y</span><span class="p">;</span> <span class="c1">// 1 when x == -1</span>
+    <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">^</span><span class="n">y</span><span class="p">;</span> <span class="c1">// nonzero unless x == -1 or x == Tmax</span>
+    <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="n">a</span> <span class="o">|</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>One of plausible - but wrong - answers exploits the fact that <code class="language-plaintext highlighter-rouge">INT_MAX</code> plus one, which has equivalent bit expression of <code class="language-plaintext highlighter-rouge">INT_MIN</code>, is one of the two solutions twice of which make zero (in an overflowing manner).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    return !(x + x + 2) &amp; !!(x + 1)
+</code></pre></div></div>
+
+<p>This will fail the test anyhow, because <strong>the compiler(gcc) mercilessly optimizes the whole term to zero!</strong>
+For historical reasons, it seems like the compiler assumes that <a href="https://stackoverflow.com/questions/18195715/why-is-unsigned-integer-overflow-defined-behavior-but-signed-integer-overflow-is">no overflow should occur in signed integer</a> and there is no way to make the term nonzero unless <code class="language-plaintext highlighter-rouge">x</code> is the overflowing value <code class="language-plaintext highlighter-rouge">INT_MAX</code>.
+Despite that the overflow is intended to detect <code class="language-plaintext highlighter-rouge">INT_MAX</code>, the only way to tell the compiler to do so is to turn off the optimization, which violates the lab rule.</p>
+
+<h3 id="negate">negate</h3>
+
+<blockquote>
+  <p>Arithmetical negation using <code class="language-plaintext highlighter-rouge">! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</code></p>
+</blockquote>
+
+<p>This is straightforward:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">negate</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="isasciidigit">isAsciiDigit</h3>
+
+<blockquote>
+  <p>return 1 if <code class="language-plaintext highlighter-rouge">x</code> is the ASCII code range for digits(characters <code class="language-plaintext highlighter-rouge">0</code> to <code class="language-plaintext highlighter-rouge">9</code> - range <code class="language-plaintext highlighter-rouge">0x30</code> to <code class="language-plaintext highlighter-rouge">0x39</code>)</p>
+</blockquote>
+
+<p>We can split the given range based on the bit pattern of it:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">x</code> matches with <code class="language-plaintext highlighter-rouge">0x30</code>, except possibly right 3 bits(<code class="language-plaintext highlighter-rouge">0x30 ~ 0x37</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">x</code> matches with <code class="language-plaintext highlighter-rouge">0x38</code>, except possibly right 1 bit(<code class="language-plaintext highlighter-rouge">0x38 ~ 0x39</code>)</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">isAsciiDigit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="n">x</span> <span class="o">^</span> <span class="mh">0x30</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">);</span> <span class="c1">//0x30 ~ 0x37</span>
+  <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="n">x</span> <span class="o">^</span> <span class="mh">0x38</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">//0x38 ~ 0x39</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">|</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="islessorequal">isLessOrEqual</h3>
+
+<blockquote>
+  <p>Implement <code class="language-plaintext highlighter-rouge">x &lt;= y</code> with operations <code class="language-plaintext highlighter-rouge">! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</code> only.</p>
+</blockquote>
+
+<p>The basic idea is to examine the sign of <code class="language-plaintext highlighter-rouge">y - x</code>, as well as the possibilities of overflowing or underflowing.
+While we can’t directly use subtraction, equivalently we can use <code class="language-plaintext highlighter-rouge">y + (~x) + 1</code>.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">isLessOrEqual</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">sx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">sy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">;</span>
+
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">sy</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">sx</span> <span class="o">&amp;</span> <span class="n">sy</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="p">((</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">|</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="logicalneg">logicalNeg</h3>
+
+<blockquote>
+  <p>implement <code class="language-plaintext highlighter-rouge">!x</code> with operations <code class="language-plaintext highlighter-rouge">~ &amp; ^ | + &lt;&lt; &gt;&gt;</code>.</p>
+</blockquote>
+
+<p>If there are at least one bit set, then zero. Otherwise one.</p>
+
+<p>The first attempt is to OR all the bits using bitshift.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">logicalNeg</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">){</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>On the other hand, we should consider the max operation counts – up to 12 operations are allowed, and this solution saturated the limit.</p>
+
+<p>An alternative solution, inspired from previous <code class="language-plaintext highlighter-rouge">isTmax</code> function goes like this: <code class="language-plaintext highlighter-rouge">0</code> has unique property that its arithmetic negation has the same 0 sign bit to itself.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">logicalNeg</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">){</span>
+  <span class="k">return</span> <span class="p">((</span><span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="howmanybits">howManyBits</h3>
+
+<blockquote>
+  <p>return the minimum number of bits required to represent <code class="language-plaintext highlighter-rouge">x</code> in two’s complement.</p>
+</blockquote>
+
+<p>This was the trickiest one - considering so many edges cases, designing logic without too much exceptional cases…</p>
+
+<p>Let’s start with some observations.</p>
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is positive, return the highest set bit index(0-based) + 2.</li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is zero, return 1.</li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is negative, return the lowest bit index of leading 1s + 1, which is equal to the highest unset bit index + 2. Hence the result is equal for <code class="language-plaintext highlighter-rouge">~x</code>, which is positive.</li>
+</ul>
+
+<p>We can preprocess <code class="language-plaintext highlighter-rouge">x</code> to merge all 3 cases into one:</p>
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is positive, then <code class="language-plaintext highlighter-rouge">y = 2*x or 2*x+1</code></li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is negative, then <code class="language-plaintext highlighter-rouge">y = 2*(~x) or 2*(~x)+1</code></li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is zero, then <code class="language-plaintext highlighter-rouge">y = 1</code></li>
+</ul>
+
+<p>so that we only have to find the highest set bit index of <code class="language-plaintext highlighter-rouge">y</code> and just add 1.
+(when <code class="language-plaintext highlighter-rouge">x</code> is nonzero, LSB is irrelevant since it is obviously not the highest set bit.)</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="o">&gt;&gt;</span><span class="mi">31</span><span class="p">)</span> <span class="o">^</span> <span class="n">x</span> <span class="p">)</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Now we’re not only trying to identify the highest bit index of <code class="language-plaintext highlighter-rouge">y</code>, but also construct its bit representation.
+Let the index stored in <code class="language-plaintext highlighter-rouge">r</code>(initially 0) and we will determine the bits of <code class="language-plaintext highlighter-rouge">r</code>.
+So we start with querying whether there is a set bit larger than or equal to 16th.</p>
+
+<p>If a set bit was found in 16th~31th bits, then we can move on to next query for finding set bit on 24th~31st bits to determine the next bit of <code class="language-plaintext highlighter-rouge">r</code>. Otherwise, find set bit on 8th~15th bits.</p>
+
+<p>Overall, we want to implement this sort of code with restricted operations:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">z</span><span class="p">){</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">16</span><span class="p">;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>the translated results would be:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="o">!</span><span class="n">z</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// if &gt;= 16th bit exists then 1..1, otherwise 0.</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">|</span> <span class="p">(</span><span class="n">f</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">);</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">f</span> <span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">f</span> <span class="o">&amp;</span> <span class="n">z</span><span class="p">);</span> <span class="c1">// y = (z ? z : y);</span>
+</code></pre></div></div>
+
+<p>and repeat this code, replacing <code class="language-plaintext highlighter-rouge">16</code> with <code class="language-plaintext highlighter-rouge">8, 4, 2, 1</code> respectively.</p>
+
+<p>Now the only ‘flaw’ of this code is that since we’re using signed integer arithmetic, the right shift has possibly carried the sign bit of initial <code class="language-plaintext highlighter-rouge">y</code>.
+Usually, we can solve it with declaring <code class="language-plaintext highlighter-rouge">y</code> as unsigned, but typecasting is prohibited in this lab.</p>
+
+<p>This is actually not a problem, since if the initial <code class="language-plaintext highlighter-rouge">y</code> has a sign bit, then there actually IS a set bit in 16th~31st, 24th~31st, 28th~31st, 30th~31st, 31st range, and the nonzero-ness of <code class="language-plaintext highlighter-rouge">z</code> for each iteration won’t be change regardless of arithmetical or logical right shift we are using.</p>
+
+<p>The above four-line code, can be more compactified as following.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">b</span> <span class="o">=</span> <span class="o">!!</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">// if &gt;=16th bit exists then 16, otherwise 0</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">|</span> <span class="n">b</span><span class="p">;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The full code is omitted.</p>
+
+<h2 id="float-coding">Float Coding</h2>
+
+<p>Skip for this blog. Since float coding rules for this lab has much degrees of freedom(including control flow), we can solve them way more easily.</p>]]></content><author><name></name></author><category term="arch" /><category term="arch" /><category term="CSAPP" /><summary type="html"><![CDATA[Data Lab]]></summary></entry><entry><title type="html">Setting up Jekyll Blog</title><link href="https://paulsohn.github.io/dev/2022/08/23/setting-up-jekyll-blog.html" rel="alternate" type="text/html" title="Setting up Jekyll Blog" /><published>2022-08-23T14:20:00+00:00</published><updated>2022-08-23T14:20:00+00:00</updated><id>https://paulsohn.github.io/dev/2022/08/23/setting-up-jekyll-blog</id><content type="html" xml:base="https://paulsohn.github.io/dev/2022/08/23/setting-up-jekyll-blog.html"><![CDATA[<h2 id="setting-up-jekyll-blog">Setting up Jekyll Blog</h2>
+
+<h3 id="installation-and-initialization">Installation and Initialization</h3>
+
+<p>I created a <code class="language-plaintext highlighter-rouge">paulsohn.github.io</code> repo which remote is on github.
+Necessary installations are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt install ruby
+$ sudo apt install gem
+$ gem install jekyll bundler
+</code></pre></div></div>
+
+<p>It takes some time. After that, initialize jekyll blog.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ jekyll new --skip-bundle .
+</code></pre></div></div>
+
+<p>Once they’re done, I deployed it on my local machine.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundle install
+$ bundle exec jekyll serve
+</code></pre></div></div>
+
+<p>Publishing is easy - just git push it and github will do the rest of the work for you.</p>
+
+<h3 id="configurations">Configurations</h3>
+<p>I decided to apply <a href="https://mmistakes.github.io/minimal-mistakes/">minimal mistakes</a> theme on my blog. In <code class="language-plaintext highlighter-rouge">_config.yml</code>, comment out <code class="language-plaintext highlighter-rouge">theme</code> and add below:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>remote_theme: "mmistakes/minimal-mistakes@4.24.0"
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+  - jekyll-include-cache
+</code></pre></div></div>
+
+<p>I wanted pages to see posts category-wise and tag-wise, so I added this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/
+</code></pre></div></div>
+<p>and this is my <code class="language-plaintext highlighter-rouge">category-archive.md</code>. <code class="language-plaintext highlighter-rouge">tag-archive.md</code> is similar.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+title: "Posts by Category"
+layout: categories
+permalink: /categories/
+author_profile: true
+---
+</code></pre></div></div>
+
+<h2 id="references">References</h2>
+<ul>
+  <li>https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll</li>
+  <li>https://theorydb.github.io/envops/2019/05/03/envops-blog-github-pages-jekyll/</li>
+  <li>https://theorydb.github.io/envops/2019/05/04/envops-blog-posting-prose-io/</li>
+</ul>]]></content><author><name></name></author><category term="dev" /><summary type="html"><![CDATA[Setting up Jekyll Blog]]></summary></entry></feed>

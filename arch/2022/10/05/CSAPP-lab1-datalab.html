@@ -1,0 +1,579 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>CSAPP - Lab 1. (32-bit) Data Lab - PaulSohn-al Logs</title>
+<meta name="description" content="Data Lab">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="PaulSohn-al Logs">
+<meta property="og:title" content="CSAPP - Lab 1. (32-bit) Data Lab">
+<meta property="og:url" content="https://paulsohn.github.io/arch/2022/10/05/CSAPP-lab1-datalab.html">
+
+
+  <meta property="og:description" content="Data Lab">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-10-05T08:28:00+00:00">
+
+
+
+  <meta property="article:modified_time" content="2022-10-05T08:28:00+00:00">
+
+
+
+
+<link rel="canonical" href="https://paulsohn.github.io/arch/2022/10/05/CSAPP-lab1-datalab.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://paulsohn.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="PaulSohn-al Logs Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--posts">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          PaulSohn-al Logs
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle Menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <a href="/category/diary/"><span class="nav__sub-title">Diary</span></a>
+        
+
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Computer Science</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/category/algorithm/">Algorithms</a></li>
+          
+            <li><a href="/category/arch/">Computer Architectures</a></li>
+          
+            <li><a href="/category/lang/">Programming Languages</a></li>
+          
+            <li><a href="/category/data/">Data Science</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Developments</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/category/frontend/">Frontend</a></li>
+          
+            <li><a href="/category/dev/">Misc</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">CSAPP - Lab 1. (32-bit) Data Lab</h1>
+    
+    <h1 id="data-lab">Data Lab</h1>
+
+<p>A lab assignment to implement primitive operations with (mostly) bitwise operations only. <code class="language-plaintext highlighter-rouge">int</code> type is assumed to be 32-bit.</p>
+
+<h2 id="integer-coding">Integer Coding</h2>
+
+<h3 id="common-techniques">Common Techniques</h3>
+
+<ul>
+  <li>an all-set bit mask: <code class="language-plaintext highlighter-rouge">~0</code></li>
+  <li>a bit mask from <code class="language-plaintext highlighter-rouge">x</code>, full of its sign bit: <code class="language-plaintext highlighter-rouge">x &gt;&gt; 31</code></li>
+</ul>
+
+<h3 id="istmax">isTmax</h3>
+
+<blockquote>
+  <p>Check whether the argument <code class="language-plaintext highlighter-rouge">x</code> is <code class="language-plaintext highlighter-rouge">INT_MAX</code> or not. can use <code class="language-plaintext highlighter-rouge">! ~ &amp; ^ | +</code>.</p>
+</blockquote>
+
+<p>We can focus on a unique feature of <code class="language-plaintext highlighter-rouge">INT_MAX</code>: its successor is the exact bit negation of itself - every bits of <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">x+1</code> are different.
+The bitwise comparison for <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">x+1</code> can be implemented as <code class="language-plaintext highlighter-rouge">(x+1)^(~x)</code> (<code class="language-plaintext highlighter-rouge">(~(x+1))^x</code> works also), and this will be zero when <code class="language-plaintext highlighter-rouge">x</code> is equal to <code class="language-plaintext highlighter-rouge">INT_MAX</code>.</p>
+
+<p>Actually, this feature is not unique - <code class="language-plaintext highlighter-rouge">-1</code> also fits to this description.
+So we have to detect <code class="language-plaintext highlighter-rouge">-1</code> in a different way.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">isTmax</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="o">~</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="o">!</span><span class="n">y</span><span class="p">;</span> <span class="c1">// 1 when x == -1</span>
+    <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">^</span><span class="n">y</span><span class="p">;</span> <span class="c1">// nonzero unless x == -1 or x == Tmax</span>
+    <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="n">a</span> <span class="o">|</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>One of plausible - but wrong - answers exploits the fact that <code class="language-plaintext highlighter-rouge">INT_MAX</code> plus one, which has equivalent bit expression of <code class="language-plaintext highlighter-rouge">INT_MIN</code>, is one of the two solutions twice of which make zero (in an overflowing manner).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    return !(x + x + 2) &amp; !!(x + 1)
+</code></pre></div></div>
+
+<p>This will fail the test anyhow, because <strong>the compiler(gcc) mercilessly optimizes the whole term to zero!</strong>
+For historical reasons, it seems like the compiler assumes that <a href="https://stackoverflow.com/questions/18195715/why-is-unsigned-integer-overflow-defined-behavior-but-signed-integer-overflow-is">no overflow should occur in signed integer</a> and there is no way to make the term nonzero unless <code class="language-plaintext highlighter-rouge">x</code> is the overflowing value <code class="language-plaintext highlighter-rouge">INT_MAX</code>.
+Despite that the overflow is intended to detect <code class="language-plaintext highlighter-rouge">INT_MAX</code>, the only way to tell the compiler to do so is to turn off the optimization, which violates the lab rule.</p>
+
+<h3 id="negate">negate</h3>
+
+<blockquote>
+  <p>Arithmetical negation using <code class="language-plaintext highlighter-rouge">! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</code></p>
+</blockquote>
+
+<p>This is straightforward:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">negate</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="isasciidigit">isAsciiDigit</h3>
+
+<blockquote>
+  <p>return 1 if <code class="language-plaintext highlighter-rouge">x</code> is the ASCII code range for digits(characters <code class="language-plaintext highlighter-rouge">0</code> to <code class="language-plaintext highlighter-rouge">9</code> - range <code class="language-plaintext highlighter-rouge">0x30</code> to <code class="language-plaintext highlighter-rouge">0x39</code>)</p>
+</blockquote>
+
+<p>We can split the given range based on the bit pattern of it:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">x</code> matches with <code class="language-plaintext highlighter-rouge">0x30</code>, except possibly right 3 bits(<code class="language-plaintext highlighter-rouge">0x30 ~ 0x37</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">x</code> matches with <code class="language-plaintext highlighter-rouge">0x38</code>, except possibly right 1 bit(<code class="language-plaintext highlighter-rouge">0x38 ~ 0x39</code>)</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">isAsciiDigit</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="n">x</span> <span class="o">^</span> <span class="mh">0x30</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">);</span> <span class="c1">//0x30 ~ 0x37</span>
+  <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="n">x</span> <span class="o">^</span> <span class="mh">0x38</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">//0x38 ~ 0x39</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">|</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="islessorequal">isLessOrEqual</h3>
+
+<blockquote>
+  <p>Implement <code class="language-plaintext highlighter-rouge">x &lt;= y</code> with operations <code class="language-plaintext highlighter-rouge">! ~ &amp; ^ | + &lt;&lt; &gt;&gt;</code> only.</p>
+</blockquote>
+
+<p>The basic idea is to examine the sign of <code class="language-plaintext highlighter-rouge">y - x</code>, as well as the possibilities of overflowing or underflowing.
+While we can’t directly use subtraction, equivalently we can use <code class="language-plaintext highlighter-rouge">y + (~x) + 1</code>.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">isLessOrEqual</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">sx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">sy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">;</span>
+
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">sy</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">sx</span> <span class="o">&amp;</span> <span class="n">sy</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="p">((</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">|</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="logicalneg">logicalNeg</h3>
+
+<blockquote>
+  <p>implement <code class="language-plaintext highlighter-rouge">!x</code> with operations <code class="language-plaintext highlighter-rouge">~ &amp; ^ | + &lt;&lt; &gt;&gt;</code>.</p>
+</blockquote>
+
+<p>If there are at least one bit set, then zero. Otherwise one.</p>
+
+<p>The first attempt is to OR all the bits using bitshift.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">logicalNeg</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">){</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>On the other hand, we should consider the max operation counts – up to 12 operations are allowed, and this solution saturated the limit.</p>
+
+<p>An alternative solution, inspired from previous <code class="language-plaintext highlighter-rouge">isTmax</code> function goes like this: <code class="language-plaintext highlighter-rouge">0</code> has unique property that its arithmetic negation has the same 0 sign bit to itself.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">logicalNeg</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">){</span>
+  <span class="k">return</span> <span class="p">((</span><span class="n">x</span> <span class="o">|</span> <span class="p">(</span><span class="o">~</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="howmanybits">howManyBits</h3>
+
+<blockquote>
+  <p>return the minimum number of bits required to represent <code class="language-plaintext highlighter-rouge">x</code> in two’s complement.</p>
+</blockquote>
+
+<p>This was the trickiest one - considering so many edges cases, designing logic without too much exceptional cases…</p>
+
+<p>Let’s start with some observations.</p>
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is positive, return the highest set bit index(0-based) + 2.</li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is zero, return 1.</li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is negative, return the lowest bit index of leading 1s + 1, which is equal to the highest unset bit index + 2. Hence the result is equal for <code class="language-plaintext highlighter-rouge">~x</code>, which is positive.</li>
+</ul>
+
+<p>We can preprocess <code class="language-plaintext highlighter-rouge">x</code> to merge all 3 cases into one:</p>
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is positive, then <code class="language-plaintext highlighter-rouge">y = 2*x or 2*x+1</code></li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is negative, then <code class="language-plaintext highlighter-rouge">y = 2*(~x) or 2*(~x)+1</code></li>
+  <li>If <code class="language-plaintext highlighter-rouge">x</code> is zero, then <code class="language-plaintext highlighter-rouge">y = 1</code></li>
+</ul>
+
+<p>so that we only have to find the highest set bit index of <code class="language-plaintext highlighter-rouge">y</code> and just add 1.
+(when <code class="language-plaintext highlighter-rouge">x</code> is nonzero, LSB is irrelevant since it is obviously not the highest set bit.)</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="o">&gt;&gt;</span><span class="mi">31</span><span class="p">)</span> <span class="o">^</span> <span class="n">x</span> <span class="p">)</span> <span class="o">|</span> <span class="mi">1</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Now we’re not only trying to identify the highest bit index of <code class="language-plaintext highlighter-rouge">y</code>, but also construct its bit representation.
+Let the index stored in <code class="language-plaintext highlighter-rouge">r</code>(initially 0) and we will determine the bits of <code class="language-plaintext highlighter-rouge">r</code>.
+So we start with querying whether there is a set bit larger than or equal to 16th.</p>
+
+<p>If a set bit was found in 16th~31th bits, then we can move on to next query for finding set bit on 24th~31st bits to determine the next bit of <code class="language-plaintext highlighter-rouge">r</code>. Otherwise, find set bit on 8th~15th bits.</p>
+
+<p>Overall, we want to implement this sort of code with restricted operations:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">z</span><span class="p">){</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">16</span><span class="p">;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>the translated results would be:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">z</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="o">!</span><span class="n">z</span> <span class="o">+</span> <span class="p">(</span><span class="o">~</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// if &gt;= 16th bit exists then 1..1, otherwise 0.</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">|</span> <span class="p">(</span><span class="n">f</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">);</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">f</span> <span class="o">&amp;</span> <span class="n">y</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">f</span> <span class="o">&amp;</span> <span class="n">z</span><span class="p">);</span> <span class="c1">// y = (z ? z : y);</span>
+</code></pre></div></div>
+
+<p>and repeat this code, replacing <code class="language-plaintext highlighter-rouge">16</code> with <code class="language-plaintext highlighter-rouge">8, 4, 2, 1</code> respectively.</p>
+
+<p>Now the only ‘flaw’ of this code is that since we’re using signed integer arithmetic, the right shift has possibly carried the sign bit of initial <code class="language-plaintext highlighter-rouge">y</code>.
+Usually, we can solve it with declaring <code class="language-plaintext highlighter-rouge">y</code> as unsigned, but typecasting is prohibited in this lab.</p>
+
+<p>This is actually not a problem, since if the initial <code class="language-plaintext highlighter-rouge">y</code> has a sign bit, then there actually IS a set bit in 16th~31st, 24th~31st, 28th~31st, 30th~31st, 31st range, and the nonzero-ness of <code class="language-plaintext highlighter-rouge">z</code> for each iteration won’t be change regardless of arithmetical or logical right shift we are using.</p>
+
+<p>The above four-line code, can be more compactified as following.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">b</span> <span class="o">=</span> <span class="o">!!</span><span class="p">(</span><span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">// if &gt;=16th bit exists then 16, otherwise 0</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">|</span> <span class="n">b</span><span class="p">;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The full code is omitted.</p>
+
+<h2 id="float-coding">Float Coding</h2>
+
+<p>Skip for this blog. Since float coding rules for this lab has much degrees of freedom(including control flow), we can solve them way more easily.</p>
+
+
+<ul class="taxonomy__index">
+  
+  
+    <li>
+      <a href="#2022">
+        <strong>2022</strong> <span class="taxonomy__count">5</span>
+      </a>
+    </li>
+  
+</ul>
+
+
+
+
+  <section id="2022" class="taxonomy__section">
+    <h2 class="archive__subtitle">2022</h2>
+    <div class="entries-list">
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/2022/11/15/local-build-jekyll.html" rel="permalink">Jekyll: Build Locally and Push into Github
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Motivation
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/11/12/CSAPP-lab4-archlab.html" rel="permalink">CSAPP - Lab 4. Architecture Lab
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Arch Lab
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/10/18/CSAPP-finished-reading.html" rel="permalink">CSAPP - Finished Reading
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">I Finished ‘Reading’ CSAPP!
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/10/05/CSAPP-lab1-datalab.html" rel="permalink">CSAPP - Lab 1. (32-bit) Data Lab
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Data Lab
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/2022/08/23/setting-up-jekyll-blog.html" rel="permalink">Setting up Jekyll Blog
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Setting up Jekyll Blog
+</p>
+  </article>
+</div>
+
+      
+    </div>
+    <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
+  </section>
+
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 PaulSohn-al Logs. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

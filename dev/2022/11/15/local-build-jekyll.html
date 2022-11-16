@@ -1,0 +1,467 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Jekyll: Build Locally and Push into Github - PaulSohn-al Logs</title>
+<meta name="description" content="Motivation">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="PaulSohn-al Logs">
+<meta property="og:title" content="Jekyll: Build Locally and Push into Github">
+<meta property="og:url" content="https://paulsohn.github.io/dev/2022/11/15/local-build-jekyll.html">
+
+
+  <meta property="og:description" content="Motivation">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-11-15T10:26:00+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://paulsohn.github.io/dev/2022/11/15/local-build-jekyll.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://paulsohn.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="PaulSohn-al Logs Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--posts">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          PaulSohn-al Logs
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle Menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <a href="/category/diary/"><span class="nav__sub-title">Diary</span></a>
+        
+
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Computer Science</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/category/algorithm/">Algorithms</a></li>
+          
+            <li><a href="/category/arch/">Computer Architectures</a></li>
+          
+            <li><a href="/category/lang/">Programming Languages</a></li>
+          
+            <li><a href="/category/data/">Data Science</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Developments</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/category/frontend/">Frontend</a></li>
+          
+            <li><a href="/category/dev/">Misc</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">Jekyll: Build Locally and Push into Github</h1>
+    
+    <h2 id="motivation">Motivation</h2>
+
+<p>I wanted to use <code class="language-plaintext highlighter-rouge">jekyll-archives</code> in my blog to autogenerate index pages for each category.
+This worked on my local machine, but when I published the changes, I soon realized that my expected category-wise index pages are not shown, and instead I got 404.</p>
+
+<p>So I did some research, and soon knew that github pages only support <a href="https://pages.github.com/versions/">specific jekyll plugins</a>, and if you want to use more than that, you may <strong>build locally and upload the compiled result as a static site</strong> as explained in <a href="http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html">this reference</a>.</p>
+
+<h2 id="how-to-build-jekyll-locally-with-rakeruby-make">How to Build Jekyll Locally with rake(ruby make)</h2>
+
+<p>Provide this <code class="language-plaintext highlighter-rouge">rakefile</code> in our jekyll root directory:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"rubygems"</span>
+<span class="nb">require</span> <span class="s2">"tmpdir"</span>
+
+<span class="nb">require</span> <span class="s2">"bundler/setup"</span>
+<span class="nb">require</span> <span class="s2">"jekyll"</span>
+
+<span class="no">GITHUB_REPONAME</span> <span class="o">=</span> <span class="c1"># my repo goes here</span>
+
+<span class="n">desc</span> <span class="s2">"Generate blog files"</span>
+<span class="n">task</span> <span class="ss">:generate</span> <span class="k">do</span>
+  <span class="no">Jekyll</span><span class="o">::</span><span class="no">Site</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">Jekyll</span><span class="p">.</span><span class="nf">configuration</span><span class="p">({</span>
+    <span class="s2">"source"</span>      <span class="o">=&gt;</span> <span class="s2">"."</span><span class="p">,</span>
+    <span class="s2">"destination"</span> <span class="o">=&gt;</span> <span class="s2">"_site"</span>
+  <span class="p">})).</span><span class="nf">process</span>
+<span class="k">end</span>
+
+<span class="n">desc</span> <span class="s2">"Generate and publish blog to gh-pages"</span>
+<span class="n">task</span> <span class="ss">:publish</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="ss">:generate</span><span class="p">]</span> <span class="k">do</span>
+  <span class="no">Dir</span><span class="p">.</span><span class="nf">mktmpdir</span> <span class="k">do</span> <span class="o">|</span><span class="n">tmp</span><span class="o">|</span>
+    <span class="n">cp_r</span> <span class="s2">"_site/."</span><span class="p">,</span> <span class="n">tmp</span>
+
+    <span class="n">pwd</span> <span class="o">=</span> <span class="no">Dir</span><span class="p">.</span><span class="nf">pwd</span>
+    <span class="no">Dir</span><span class="p">.</span><span class="nf">chdir</span> <span class="n">tmp</span>
+
+    <span class="nb">system</span> <span class="s2">"cd .."</span>
+    <span class="nb">system</span> <span class="s2">"git init -b built"</span>
+    <span class="nb">system</span> <span class="s2">"git add ."</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">"Site updated at </span><span class="si">#{</span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">utc</span><span class="si">}</span><span class="s2">"</span>
+    <span class="nb">system</span> <span class="s2">"git commit -m </span><span class="si">#{</span><span class="n">message</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+    <span class="nb">system</span> <span class="s2">"git remote add origin https://github.com/</span><span class="si">#{</span><span class="no">GITHUB_REPONAME</span><span class="si">}</span><span class="s2">.git"</span>
+    <span class="nb">system</span> <span class="s2">"git push origin built --force"</span>
+
+    <span class="no">Dir</span><span class="p">.</span><span class="nf">chdir</span> <span class="n">pwd</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I slightly modified the code so that I can separately upload on different branches - source files on <code class="language-plaintext highlighter-rouge">main</code> and build output on <code class="language-plaintext highlighter-rouge">built</code><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>.</p>
+
+<p>Basically, this code enables <code class="language-plaintext highlighter-rouge">rake generate</code> to build the blog (into <code class="language-plaintext highlighter-rouge">/_site/</code>, if default settings), and <code class="language-plaintext highlighter-rouge">rake publish</code> to build then initialize <code class="language-plaintext highlighter-rouge">/_site/</code> as git repo and push it into the remote github repo, branch <code class="language-plaintext highlighter-rouge">built</code>. The commit message is generated with current time.</p>
+
+<h3 id="still-problem">Still Problem</h3>
+
+<p>This solution, while apparently correct, still did not work for me.
+I failed to figure out why, but <code class="language-plaintext highlighter-rouge">rake generate</code> appears to be omitting <code class="language-plaintext highlighter-rouge">jekyll-archives</code> I wanted to apply, and the build result is different from that of <code class="language-plaintext highlighter-rouge">jekyll build</code>.</p>
+
+<p>To get my desired behavior, I simply changed the task body into invocation of system command.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">task</span> <span class="ss">:generate</span> <span class="k">do</span>
+  <span class="nb">system</span> <span class="s2">"jekyll build"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I also tried to get the API docs of Jekyll package used inside Ruby, but I couldn’t find one.
+Should admit also that I am too lazy to dig into the Jekyll code (or even learn Ruby) just for publishing a blog,
+I wanted to keep my environment setting step minimal and do the real works as fast I can - or at least for this moment.</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://pages.github.com/versions/">Dependency versions | Github Pages</a></li>
+  <li><a href="http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html">Using Jekyll plugins on GitHub Pages</a></li>
+  <li><a href="https://jr-developers.github.io/blog/2020/12/08/blog1.html">Jekyll Github Page 미지원 Plugin 빌드 배포</a> (Korean)</li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>I feel sorry for that name. Maybe <code class="language-plaintext highlighter-rouge">build</code> would be a better choice, but hey, I’m not an English native person. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+
+<ul class="taxonomy__index">
+  
+  
+    <li>
+      <a href="#2022">
+        <strong>2022</strong> <span class="taxonomy__count">5</span>
+      </a>
+    </li>
+  
+</ul>
+
+
+
+
+  <section id="2022" class="taxonomy__section">
+    <h2 class="archive__subtitle">2022</h2>
+    <div class="entries-list">
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/2022/11/15/local-build-jekyll.html" rel="permalink">Jekyll: Build Locally and Push into Github
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Motivation
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/11/12/CSAPP-lab4-archlab.html" rel="permalink">CSAPP - Lab 4. Architecture Lab
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Arch Lab
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/10/18/CSAPP-finished-reading.html" rel="permalink">CSAPP - Finished Reading
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">I Finished ‘Reading’ CSAPP!
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/arch/2022/10/05/CSAPP-lab1-datalab.html" rel="permalink">CSAPP - Lab 1. (32-bit) Data Lab
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Data Lab
+</p>
+  </article>
+</div>
+
+      
+        
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/2022/08/23/setting-up-jekyll-blog.html" rel="permalink">Setting up Jekyll Blog
+</a>
+      
+    </h2>
+    
+
+
+    <p class="archive__item-excerpt" itemprop="description">Setting up Jekyll Blog
+</p>
+  </article>
+</div>
+
+      
+    </div>
+    <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
+  </section>
+
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 PaulSohn-al Logs. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
