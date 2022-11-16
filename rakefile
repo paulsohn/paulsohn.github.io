@@ -1,4 +1,4 @@
-# https://jr-developers.github.io/blog/2020/12/08/blog1.html
+# http://ixti.net/software/2013/01/28/using-jekyll-plugins-on-github-pages.html
 
 require "rubygems"
 require "tmpdir"

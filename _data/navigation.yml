@@ -22,4 +22,6 @@ sidebar:
     children:
     - title: "Frontend"
       url: /category/frontend/
+    - title: "Misc"
+      url: /category/dev/
 

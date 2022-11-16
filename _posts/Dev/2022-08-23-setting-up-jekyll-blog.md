@@ -1,11 +1,10 @@
 ---
 layout: posts
 
-# title: "Setting up Jekyll Blog"
-# excerpt: "excerpt"
-
-categories: diary
+title: "Setting up Jekyll Blog"
+categories: dev
 # tags: diary
+# excerpt: "excerpt"
 
 date: 2022-08-23 23:20:00 +09:00
 last_modified_at: 2022-08-23 23:20:00 +09:00
